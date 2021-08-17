@@ -54,3 +54,22 @@
 .menuItem_info {
     padding: 16px;
 }
+
+.incrementDecrementBtn {
+    /* border-radius: 50%; */
+    background-color: white;
+    border: none;
+    padding: 6px;
+}
+
+.addToCart {
+    color: #FFC534;
+}
+
+.quantityContainer {
+    display: flex;
+    align-items:baseline;
+    position:absolute;
+    top: 8px;
+    right: 8px;
+}

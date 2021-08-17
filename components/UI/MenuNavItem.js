@@ -28,13 +28,16 @@ const MenuNavItem = (props) => {
     return (
         <div
             className={`${styles.buttonDefault} ${buttonClass}`} 
-            onClick={() => props.changeActiveItem(props.category)}>
-            <Image 
-                src={selectedSvgIcon}
-                alt="menu-item" 
-                width={25}
-                height={25}
+            onClick={() => props.changeActiveItem(props.category)}
+            >
+            <div className={styles.imageContainer}>
+                <Image 
+                    src={selectedSvgIcon}
+                    alt="menu-item" 
+                    width={25}
+                    height={25}
                 />
+            </div>
             <span className={styles.svgIconSpanSpacing}>{props.category}</span>
 
         </div>
