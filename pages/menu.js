@@ -1,8 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import menuItems from '../data/MenuItems'
 import MenuItem from '../components/MenuItems/MenuItem'
 import MenuNav from '../components/UI/MenuNav'
 import MenuSearch from '../components/UI/MenuSearch'
+import Cart from './cart'
+import OrderContext from '../store/order-context'
 
 
 
@@ -11,6 +13,7 @@ const Menu = (props) => {
     const [activeCategory, setActiveCategory] = useState('Appetizers');
     const [currentSearchResults, setCurrentSearchResults] = useState([])
     const [openSearchResults, setOpenSearchResults] = useState(false);
+    const ctx = useContext(OrderContext)
 
     const changeActiveItem = (category) => {
       setActiveCategory(category)
@@ -54,8 +57,13 @@ const Menu = (props) => {
 
     return (
       <div>
-        <MenuSearch handleMenuSearchInput={handleMenuSearchInput} handleCloseSearchResults={handleCloseSearchResults}/>
-        { openSearchResults ? searchResultsContainer : allResultsFilterable }
+        <div>
+          <MenuSearch handleMenuSearchInput={handleMenuSearchInput} handleCloseSearchResults={handleCloseSearchResults}/>
+          { openSearchResults ? searchResultsContainer : allResultsFilterable }
+        </div>
+        <div>
+          <Cart orders={ctx.orders}/>
+        </div>
       </div>
     )
 }
