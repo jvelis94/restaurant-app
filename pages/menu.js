@@ -21,7 +21,7 @@ const Menu = (props) => {
         setOpenSearchResults(true)
         let searchResults = props.data.filter(item => {
           let itemFlattened = item.name.toLowerCase()
-          return itemFlattened.includes(searchInput)
+          return itemFlattened.includes(searchInput.toLowerCase())
         })
         setCurrentSearchResults(searchResults)
       } else {

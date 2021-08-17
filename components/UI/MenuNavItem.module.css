@@ -3,10 +3,16 @@
     align-items: center;
     justify-content: space-between;
     border-radius: 50px;
-    padding: 12px;
+    padding: 8px;
     border: none;
     font-weight: bold;
     margin-right: 12px;
+}
+
+.imageContainer {
+    width:25px;
+    height:25px;
+    position: relative;
 }
 
 .buttonInactive {
