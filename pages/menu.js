@@ -54,7 +54,7 @@ const Menu = (props) => {
 
     return (
       <div>
-        <MenuSearch handleMenuSearchInput={handleMenuSearchInput} />
+        <MenuSearch handleMenuSearchInput={handleMenuSearchInput} handleCloseSearchResults={handleCloseSearchResults}/>
         { openSearchResults ? searchResultsContainer : allResultsFilterable }
       </div>
     )

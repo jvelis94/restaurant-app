@@ -9,10 +9,14 @@ const MenuSearch = (props) => {
     props.handleMenuSearchInput(menuSearchRef.current.value)
   }
 
+  const handleClearIconClick = () => {
+    props.handleCloseSearchResults()
+  }
+
   return (
     <div className={styles.menuSearch_container} >
       <input ref={menuSearchRef} type="text" placeholder="Search menu items..."  className={styles.menuSearch_bar} onChange={handleInputChange}/>
-      <ClearIcon />
+      <ClearIcon onClick={handleClearIconClick}/>
     </div>
   )
 }

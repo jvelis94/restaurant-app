@@ -1,15 +1,18 @@
 .menuSearch_container {
-    padding: 8px;
+    padding: 12px;
     border: none;
     width: 100%;
     text-align: center;
+    box-shadow: 6px 9px 22px -25px rgba(0,0,0,0.75);
+    display: flex;
+    align-items: center;
 }
 
 .menuSearch_bar {
     padding: 12px;
     border-radius: 24px;
     border: none;
-    box-shadow: 6px 9px 22px -25px rgba(0,0,0,0.75);
+    /* box-shadow: 6px 9px 22px -25px rgba(0,0,0,0.75); */
     width: 90%;
 }
 
