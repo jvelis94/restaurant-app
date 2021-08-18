@@ -11,6 +11,7 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
+    "@prisma/client": "^2.29.1",
     "csv": "^5.5.0",
     "csv-parser": "^3.0.0",
     "fs": "^0.0.1-security",
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "eslint": "7.32.0",
-    "eslint-config-next": "11.1.0"
+    "eslint-config-next": "11.1.0",
+    "prisma": "^2.29.1"
   }
 }
