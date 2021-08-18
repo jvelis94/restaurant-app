@@ -1,17 +1,22 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import styles from './CartTable.module.css'
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
+import OrderContext from '../../store/order-context';
 
 const CartTable = (props) => {
+    const ctx = useContext(OrderContext)
     const [orderItems, setOrderItems] = useState(props.orders)
 
-    const incrementQuantity = () => {
-        setQuantity(prevState => prevState + 1)
+    const incrementQuantity = (item) => {
+        ctx.incrementQuantity(item)
+        // setQuantity(prevState => prevState + 1)
     }
 
-    const decrementQuantity = () => {
-        setQuantity(prevState => prevState - 1)
+    const decrementQuantity = (item) => {
+        ctx.decrementQuantity(item)
+        console.log(orderItems)
+        // setQuantity(prevState => prevState - 1)
     }
     
     if (orderItems && orderItems.length < 1) {
@@ -20,8 +25,6 @@ const CartTable = (props) => {
         )
     }
 
-    // const disableDeleteIcon = quantity === 1 ? true : false
-    // add this when you figure out where the state for quantity should go
 
     return (
         <table className={styles.cartTable}>
@@ -37,9 +40,9 @@ const CartTable = (props) => {
                     <tr key={orderItem.name} >
                         <td className={styles.cartTableQtyColumns}>
                             <div className={styles.quantityControls}>
-                                <RemoveIcon className={styles.incrementDecrementBtn} onClick={decrementQuantity} style={{fontSize: 'medium'}}/>
+                                <RemoveIcon className={styles.incrementDecrementBtn} onClick={()=>decrementQuantity(orderItem)} color={orderItem.quantity === 1 ? 'disabled' : 'inherit'} style={{fontSize: 'medium'}}/>
                                 <span style={{color: 'white'}}>{orderItem.quantity}</span>
-                                <AddIcon className={styles.incrementDecrementBtn} onClick={incrementQuantity} style={{fontSize: 'medium'}}/>
+                                <AddIcon className={styles.incrementDecrementBtn} onClick={()=>incrementQuantity(orderItem)} style={{fontSize: 'medium'}}/>
                             </div>
                         </td>
                         <td className={styles.cartTableNameColumns}>{orderItem.name}</td>

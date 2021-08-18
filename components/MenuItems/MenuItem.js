@@ -36,9 +36,6 @@ const MenuItem = (props) => {
 
     let selectedJpgImage = menuItemImages[category]
 
-    
-
-
     return (
         <div className={styles.menuItem_container}>
             <div className={styles.menuItem_image}>
