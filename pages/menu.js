@@ -54,6 +54,15 @@ const Menu = (props) => {
       </div>
     )
     
+    const cartItems = () => {
+      if (ctx.orders.length > 0 ) {
+        return (
+          <div>
+            <Cart orders={ctx.orders}/>
+          </div>
+        )
+      }
+    }
 
     return (
       <div>
@@ -61,9 +70,7 @@ const Menu = (props) => {
           <MenuSearch handleMenuSearchInput={handleMenuSearchInput} handleCloseSearchResults={handleCloseSearchResults}/>
           { openSearchResults ? searchResultsContainer : allResultsFilterable }
         </div>
-        <div>
-          <Cart orders={ctx.orders}/>
-        </div>
+        {cartItems}
       </div>
     )
 }
