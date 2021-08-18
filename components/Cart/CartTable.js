@@ -14,6 +14,7 @@ const CartTable = (props) => {
         setQuantity(prevState => prevState - 1)
     }
 
+    console.log(orderItems.length)
     
     if (orderItems.length < 1) {
         return (
