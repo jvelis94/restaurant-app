@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useMemo, useEffect} from 'react';
 import styles from './CartTable.module.css'
 import AddIcon from '@material-ui/icons/Add';
 import RemoveIcon from '@material-ui/icons/Remove';
@@ -6,7 +6,7 @@ import OrderContext from '../../store/order-context';
 
 const CartTable = (props) => {
     const ctx = useContext(OrderContext)
-    const [orderItems, setOrderItems] = useState(props.orders)
+    const orderItems = props.orders
 
     const incrementQuantity = (item) => {
         ctx.incrementQuantity(item)
@@ -18,12 +18,18 @@ const CartTable = (props) => {
         console.log(orderItems)
         // setQuantity(prevState => prevState - 1)
     }
-    
+
+    const removeItem = (item) => {
+        ctx.removeCartItem(item)
+    }
+
     if (orderItems && orderItems.length < 1) {
         return (
             <h2>No items in your cart at this time</h2>
         )
     }
+
+
 
 
     return (
@@ -47,6 +53,7 @@ const CartTable = (props) => {
                         </td>
                         <td className={styles.cartTableNameColumns}>{orderItem.name}</td>
                         <td className={styles.cartTablePriceColumns}>{orderItem.price}</td>
+                        <td className={styles.cartTableRemoveColumns} onClick={()=>removeItem(orderItem)}>Remove</td>
                     </tr>
                 ))}
             </tbody>

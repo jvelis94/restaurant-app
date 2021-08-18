@@ -1,10 +1,13 @@
 .cartTable {
     padding: 24px;
     width: 100%;
+    border-collapse: inherit;
+    border-spacing: 0 10px;
 }
 
 .cartTableNameColumns {
-    width: 70%;
+    width: 60%;
+    padding: 8px 16px;
 }
 
 .cartTablePriceColumns {
@@ -13,6 +16,13 @@
 
 .cartTableQtyColumns {
     width: 20%;
+}
+
+.cartTableRemoveColumns {
+    width: 10%;
+    font-size:xx-small;
+    color: red;
+    font-weight: bold;
 }
 
 .quantityControls {
@@ -24,8 +34,8 @@
     border-radius: 15px;
 }
 
+
 .cartTableRows {
-    padding: 8px;
     padding: 8px;
 }
 

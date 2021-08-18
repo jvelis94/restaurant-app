@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 
 const OrderContext = React.createContext({
     orders: [],
     addToCart: (item) => {},
     incrementQuantity: (item) => {},
-    decrementQuantity: (item) => {}
+    decrementQuantity: (item) => {},
+    removeCartItem: (item) => {}
 });
 
 export const OrderContextProvider = (props) => {
@@ -37,7 +38,10 @@ export const OrderContextProvider = (props) => {
     const decrementQuantity = (item) => {
         let updateIndex = orders.indexOf(item)
         let orderItem = orders.find(order => order['name'] === item.name)
-        if (orderItem['quantity'] !== 1) {
+        if (orderItem['quantity'] === 1) {
+            removeCartItem(item)
+        }
+        else {
             orderItem['quantity'] -= 1
             setOrders(prevState => {
                 prevState[updateIndex] = orderItem
@@ -45,6 +49,12 @@ export const OrderContextProvider = (props) => {
             })
         }
     }
+    
+    const removeCartItem = (item) => {
+        let newOrderArray = orders.filter(el => el !== item)
+        setOrders([...newOrderArray])
+    }
+
 
     return (
         <OrderContext.Provider
@@ -52,7 +62,8 @@ export const OrderContextProvider = (props) => {
                 orders: orders,
                 addToCart: addToCart,
                 incrementQuantity: incrementQuantity,
-                decrementQuantity: decrementQuantity
+                decrementQuantity: decrementQuantity,
+                removeCartItem: removeCartItem
             }}
         >
             {props.children}
