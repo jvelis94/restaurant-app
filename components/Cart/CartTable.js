@@ -35,10 +35,11 @@ const CartTable = (props) => {
     return (
         <table className={styles.cartTable}>
             <thead>
-                <tr>
-                    <td className={styles.cartTableQtyColumns}>Qty</td>
+                <tr className={styles.cartTableHeadersRow}>
+                    <td className={`${styles.cartTableQtyColumns} ${styles.cartTableHeaders}`}>Qty</td>
                     <td className={styles.cartTableNameColumns}>Name</td>
-                    <td className={styles.cartTablePriceColumns}>Price</td>
+                    <td className={`${styles.cartTablePriceColumns} ${styles.cartTableHeaders}`}>Price</td>
+                    <td className={styles.cartTableRemoveColumns}></td>
                 </tr>
             </thead>
             <tbody>

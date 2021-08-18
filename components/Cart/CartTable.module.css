@@ -1,8 +1,21 @@
 .cartTable {
-    padding: 24px;
     width: 100%;
     border-collapse: inherit;
     border-spacing: 0 10px;
+}
+
+.cartTableHeaders {
+    padding: 8px 16px;
+    text-align: center;
+}
+
+.cartTableHeadersRow {
+    background-color: #ffc534;
+    font-weight: bold;
+}
+
+.cartTableHeaders:first-child {
+    text-align: center;
 }
 
 .cartTableNameColumns {
@@ -12,6 +25,7 @@
 
 .cartTablePriceColumns {
     width: 10%;
+    text-align: center;
 }
 
 .cartTableQtyColumns {
@@ -23,6 +37,8 @@
     font-size:xx-small;
     color: red;
     font-weight: bold;
+    text-align: left;
+    padding: 0px 12px;
 }
 
 .quantityControls {
