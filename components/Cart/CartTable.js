@@ -5,7 +5,7 @@ import RemoveIcon from '@material-ui/icons/Remove';
 
 const CartTable = (props) => {
     const [orderItems, setOrderItems] = useState(props.orders)
-    
+
     const incrementQuantity = () => {
         setQuantity(prevState => prevState + 1)
     }
@@ -14,13 +14,11 @@ const CartTable = (props) => {
         setQuantity(prevState => prevState - 1)
     }
 
-    const emptyCart = () => {
+    
+    if (orderItems.length < 1) {
         return (
-            <tr>
-                <td colSpan={3}>No items in your cart at this time</td>
-            </tr>
+            <h2>No items in your cart at this time</h2>
         )
-
     }
 
     // const disableDeleteIcon = quantity === 1 ? true : false
@@ -36,7 +34,6 @@ const CartTable = (props) => {
                 </tr>
             </thead>
             <tbody>
-                {!orderItems && emptyCart}
                 {orderItems.map(orderItem => (
                     <tr key={orderItem.name} >
                         <td className={styles.cartTableQtyColumns}>
