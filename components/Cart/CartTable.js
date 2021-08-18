@@ -14,7 +14,7 @@ const CartTable = (props) => {
         setQuantity(prevState => prevState - 1)
     }
     
-    if (orderItems.length < 1) {
+    if (orderItems && orderItems.length < 1) {
         return (
             <h2>No items in your cart at this time</h2>
         )
