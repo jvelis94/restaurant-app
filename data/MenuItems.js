@@ -397,4 +397,5 @@ const menuItems = [
     }
   ]
 
-  export default menuItems
+  // export default menuItems
+  module.exports.menuItems = menuItems;
