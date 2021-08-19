@@ -2,7 +2,6 @@ import React, {useContext, useEffect, useState} from 'react'
 import MenuItem from '../components/MenuItems/MenuItem'
 import MenuNav from '../components/UI/MenuNav'
 import MenuSearch from '../components/UI/MenuSearch'
-import Cart from './cart'
 import OrderContext from '../store/order-context'
 const { PrismaClient } = require('@prisma/client')
 
@@ -16,7 +15,7 @@ const Menu = (props) => {
     const [currentSearchResults, setCurrentSearchResults] = useState([])
     const [openSearchResults, setOpenSearchResults] = useState(false);
     const ctx = useContext(OrderContext)
-
+  
     const changeActiveItem = (category) => {
       setActiveCategory(category)
     }
@@ -42,7 +41,7 @@ const Menu = (props) => {
     const searchResultsContainer = (
       <div>
           {currentSearchResults.map(item => (
-            <MenuItem key={item.name} item={item} />
+            <MenuItem key={item.id} item={item} />
           ))}
       </div>
     )
@@ -52,7 +51,7 @@ const Menu = (props) => {
         <MenuNav categories={menuCategories} activeCategory={activeCategory} changeActiveItem={changeActiveItem}/>
         
         {props.data.filter(item => item.category === activeCategory).map(item => (
-          <MenuItem key={item.name} item={item} />
+          <MenuItem key={item.id} item={item} />
         ))}
       </div>
     )
@@ -70,6 +69,7 @@ const Menu = (props) => {
 export async function getStaticProps(context) {
     const menuItems = await prisma.product.findMany({
       select: {
+        id: true,
         name: true,
         category: true,
         blurb: true,
@@ -78,7 +78,6 @@ export async function getStaticProps(context) {
         label: true
       }
     })
-    console.log(menuItems)
 
     return {
       props: {

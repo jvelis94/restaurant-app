@@ -6,7 +6,7 @@ import OrderContext from '../../store/order-context';
 
 const CartTable = (props) => {
     const ctx = useContext(OrderContext)
-    const orderItems = props.orders
+    const orderItems = props.orderItems
 
     const incrementQuantity = (item) => {
         ctx.incrementQuantity(item)
@@ -44,7 +44,7 @@ const CartTable = (props) => {
             </thead>
             <tbody>
                 {orderItems.map(orderItem => (
-                    <tr key={orderItem.name} >
+                    <tr key={orderItem.product.name} >
                         <td className={styles.cartTableQtyColumns}>
                             <div className={styles.quantityControls}>
                                 <RemoveIcon className={styles.incrementDecrementBtn} onClick={()=>decrementQuantity(orderItem)} color={orderItem.quantity === 1 ? 'disabled' : 'inherit'} style={{fontSize: 'medium'}}/>
@@ -52,8 +52,8 @@ const CartTable = (props) => {
                                 <AddIcon className={styles.incrementDecrementBtn} onClick={()=>incrementQuantity(orderItem)} style={{fontSize: 'medium'}}/>
                             </div>
                         </td>
-                        <td className={styles.cartTableNameColumns}>{orderItem.name}</td>
-                        <td className={styles.cartTablePriceColumns}>{orderItem.price}</td>
+                        <td className={styles.cartTableNameColumns}>{orderItem.product.name}</td>
+                        <td className={styles.cartTablePriceColumns}>{orderItem.product.price}</td>
                         <td className={styles.cartTableRemoveColumns} onClick={()=>removeItem(orderItem)}>Remove</td>
                     </tr>
                 ))}

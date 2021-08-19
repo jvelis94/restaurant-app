@@ -53,7 +53,7 @@ model Order {
   tax Int
   tip Int
   total Int
-  orders OrderItem[]
+  orderItems OrderItem[]
   user User @relation(fields: [userId], references: [id])
   userId Int
 }

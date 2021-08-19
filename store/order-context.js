@@ -1,49 +1,70 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 
 const OrderContext = React.createContext({
-    orders: [],
+    order: {},
+    orderItems: [],
     addToCart: (item) => {},
     incrementQuantity: (item) => {},
     decrementQuantity: (item) => {},
     removeCartItem: (item) => {}
 });
 
-export const OrderContextProvider = (props) => {
-    const [orders, setOrders] = useState([
-        {name: 'meatball sundae', price: 12, quantity: 1},
-        {name: 'boneless wings', price: 12, quantity: 1},
-        {name: 'pretzel pops', price: 12, quantity: 1}
-    ])
+const defaultOrder = {
+    status: "open",
+    subtotal: 0,
+    tax: 0,
+    tip: 0,
+    total: 0,
+    orderItems: [],
+    user: 1
+}
 
-    const addToCart = (item) => {
-        setOrders((prevState) => [...prevState, {
-            id: item.name,
-            name: item.name,
-            price: item.price
-        }])
-        console.log(orders)
+export const OrderContextProvider = (props) => {
+    const [order, setOrder] = useState(defaultOrder)
+    const [orderItems, setOrderItems] = useState([])
+
+    const addToCart = async (item) => {
+        // console.log(orderItems)
+        const orderItem = {
+            product: item,
+            quantity: 1,
+            order: order
+        }
+        
+        setOrderItems((prevState) => [...prevState, orderItem])
+
+        try {
+            const body = orderItem
+            await fetch("/api/cart", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            })
+        } catch (error) {
+            console.error(error)
+      }
     }
     
     const incrementQuantity = (item) => {
-        console.log(orders)
-        let orderItem = orders.find(order => order['name'] === item.name)
+        console.log(orderItems)
+        let orderItem = orderItems.find(order => order['name'] === item.name)
         orderItem['quantity'] += 1
-        let updateIndex = orders.indexOf(item)
-        setOrders(prevState => {
+        let updateIndex = orderItems.indexOf(item)
+        setOrderItems(prevState => {
             prevState[updateIndex] = orderItem
             return [...prevState]
         })
     }
 
     const decrementQuantity = (item) => {
-        let updateIndex = orders.indexOf(item)
-        let orderItem = orders.find(order => order['name'] === item.name)
+        let updateIndex = orderItems.indexOf(item)
+        let orderItem = orderItems.find(order => order['name'] === item.name)
         if (orderItem['quantity'] === 1) {
             removeCartItem(item)
         }
         else {
             orderItem['quantity'] -= 1
-            setOrders(prevState => {
+            setOrderItems(prevState => {
                 prevState[updateIndex] = orderItem
                 return [...prevState]
             })
@@ -51,19 +72,20 @@ export const OrderContextProvider = (props) => {
     }
     
     const removeCartItem = (item) => {
-        let newOrderArray = orders.filter(el => el !== item)
-        setOrders([...newOrderArray])
+        let newOrderArray = orderItems.filter(el => el !== item)
+        setOrderItems([...newOrderArray])
     }
 
 
     return (
         <OrderContext.Provider
             value={{
-                orders: orders,
+                order: order,
+                orderItems: orderItems,
                 addToCart: addToCart,
                 incrementQuantity: incrementQuantity,
                 decrementQuantity: decrementQuantity,
-                removeCartItem: removeCartItem
+                removeCartItem: removeCartItem,
             }}
         >
             {props.children}

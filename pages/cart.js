@@ -12,7 +12,7 @@ const Cart = (props) => {
     // }
 
     return (
-        <CartTable orders={ctx.orders} />
+        <CartTable orderItems={ctx.orderItems} />
     )
 }
 
