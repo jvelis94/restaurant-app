@@ -1,5 +1,4 @@
 import React, {useContext, useEffect, useState} from 'react'
-import menuItems from '../data/MenuItems'
 import MenuItem from '../components/MenuItems/MenuItem'
 import MenuNav from '../components/UI/MenuNav'
 import MenuSearch from '../components/UI/MenuSearch'
