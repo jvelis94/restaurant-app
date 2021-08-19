@@ -33,6 +33,7 @@ export const OrderContextProvider = (props) => {
                 setCurrentOrder(data)
                 setOrderItems(data.orderItems.map(orderItem => {
                     let orderObject = {
+                        id: orderItem.id,
                         product: orderItem.product,
                         price: orderItem.product.price,
                         quantity: orderItem.quantity,
@@ -65,10 +66,10 @@ export const OrderContextProvider = (props) => {
             })
         } catch (error) {
             console.error(error)
-      }
+        }
     }
     
-    const incrementQuantity = (item) => {
+    const incrementQuantity = async (item) => {
         let orderItem = orderItems.find(order => order['product']['id'] === item.product.id)
         orderItem['quantity'] += 1
         let updateIndex = orderItems.indexOf(item)
@@ -76,9 +77,20 @@ export const OrderContextProvider = (props) => {
             prevState[updateIndex] = orderItem
             return [...prevState]
         })
+
+        try {
+            const body = orderItem
+            await fetch("/api/cart", {
+                method: "PATCH",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            })
+        } catch (error) {
+            console.error(error)
+        }
     }
 
-    const decrementQuantity = (item) => {
+    const decrementQuantity = async (item) => {
         let updateIndex = orderItems.indexOf(item)
         let orderItem = orderItems.find(order => order['product']['id'] === item.product.id)
         if (orderItem['quantity'] === 1) {
@@ -91,12 +103,34 @@ export const OrderContextProvider = (props) => {
                 return [...prevState]
             })
         }
+        try {
+            const body = orderItem
+            await fetch("/api/cart", {
+                method: "PATCH",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            })
+        } catch (error) {
+            console.error(error)
+        }
     }
     
-    const removeCartItem = (item) => {
-        console.log(item)
+    const removeCartItem = async (item) => {
+        let orderItem = orderItems.find(order => order['product']['id'] === item.product.id)
         let newOrderArray = orderItems.filter(el => el !== item)
         setOrderItems([...newOrderArray])
+
+        try {
+            const body = orderItem
+            await fetch("/api/cart", {
+                method: "DELETE",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body),
+            })
+        } catch (error) {
+            console.error(error)
+        }
+
     }
 
 

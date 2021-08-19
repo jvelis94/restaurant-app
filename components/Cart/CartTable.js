@@ -8,8 +8,8 @@ const CartTable = (props) => {
     const ctx = useContext(OrderContext)
     const orderItems = props.orderItems
     const currentOrder = props.currentOrder
-    console.log('current order is..')
-    console.log(currentOrder.orderItems)
+    // console.log('current order is..')
+    // console.log(currentOrder.orderItems)
 
     const incrementQuantity = (item) => {
         ctx.incrementQuantity(item)

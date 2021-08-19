@@ -61,6 +61,31 @@ async function handler(req,res) {
       })
       res.json(order)
     }
+
+    if (req.method === "PATCH") {
+      console.log('running patch request')
+      const orderItemReq = req.body
+      const orderItem = await prisma.orderItem.update({
+        where: {
+          id: orderItemReq.id
+        },
+        data: {
+          quantity: orderItemReq.quantity
+        }
+      })
+      res.json(orderItem)
+    }
+
+    if (req.method === "DELETE") {
+      console.log("running delete request")
+      const orderItemReq = req.body
+      const orderItem = await prisma.orderItem.delete({
+        where: {
+          id: orderItemReq.id
+        }
+      })
+      res.status(201).json({ message: 'successfully deleted order item' });
+    }
 }
 
 export default handler
