@@ -1,7 +1,9 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState, useCallback, useContext } from "react";
+// import { PrismaClient } from '@prisma/client'
+// const prisma = new PrismaClient()
 
 const OrderContext = React.createContext({
-    order: {},
+    currentOrder: {},
     orderItems: [],
     addToCart: (item) => {},
     incrementQuantity: (item) => {},
@@ -9,26 +11,47 @@ const OrderContext = React.createContext({
     removeCartItem: (item) => {}
 });
 
-const defaultOrder = {
-    status: "open",
-    subtotal: 0,
-    tax: 0,
-    tip: 0,
-    total: 0,
-    orderItems: [],
-    user: 1
-}
+// const defaultOrder = {
+//     status: "open",
+//     subtotal: 0,
+//     tax: 0,
+//     tip: 0,
+//     total: 0,
+//     orderItems: [],
+//     user: 1
+// }
 
 export const OrderContextProvider = (props) => {
-    const [order, setOrder] = useState(defaultOrder)
+    const [currentOrder, setCurrentOrder] = useState({})
     const [orderItems, setOrderItems] = useState([])
+    const [updateCart, setUpdateCart] = useState(false)
+
+    useEffect(() => {
+        fetch('/api/cart')
+            .then(response => response.json())
+            .then(data => {
+                setCurrentOrder(data)
+                setOrderItems(data.orderItems.map(orderItem => {
+                    let orderObject = {
+                        product: orderItem.product,
+                        price: orderItem.product.price,
+                        quantity: orderItem.quantity,
+                        order: currentOrder
+                    }
+                    return orderObject
+                }))
+            })
+        setUpdateCart(false)
+        
+    }, [updateCart])
 
     const addToCart = async (item) => {
-        // console.log(orderItems)
+        console.log(`adding ${item} to cart`)
         const orderItem = {
             product: item,
             quantity: 1,
-            order: order
+            price: item.price,
+            order: currentOrder
         }
         
         setOrderItems((prevState) => [...prevState, orderItem])
@@ -46,8 +69,7 @@ export const OrderContextProvider = (props) => {
     }
     
     const incrementQuantity = (item) => {
-        console.log(orderItems)
-        let orderItem = orderItems.find(order => order['name'] === item.name)
+        let orderItem = orderItems.find(order => order['product']['id'] === item.product.id)
         orderItem['quantity'] += 1
         let updateIndex = orderItems.indexOf(item)
         setOrderItems(prevState => {
@@ -58,7 +80,7 @@ export const OrderContextProvider = (props) => {
 
     const decrementQuantity = (item) => {
         let updateIndex = orderItems.indexOf(item)
-        let orderItem = orderItems.find(order => order['name'] === item.name)
+        let orderItem = orderItems.find(order => order['product']['id'] === item.product.id)
         if (orderItem['quantity'] === 1) {
             removeCartItem(item)
         }
@@ -72,6 +94,7 @@ export const OrderContextProvider = (props) => {
     }
     
     const removeCartItem = (item) => {
+        console.log(item)
         let newOrderArray = orderItems.filter(el => el !== item)
         setOrderItems([...newOrderArray])
     }
@@ -80,7 +103,7 @@ export const OrderContextProvider = (props) => {
     return (
         <OrderContext.Provider
             value={{
-                order: order,
+                currentOrder: currentOrder,
                 orderItems: orderItems,
                 addToCart: addToCart,
                 incrementQuantity: incrementQuantity,

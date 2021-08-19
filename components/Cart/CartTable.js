@@ -7,6 +7,9 @@ import OrderContext from '../../store/order-context';
 const CartTable = (props) => {
     const ctx = useContext(OrderContext)
     const orderItems = props.orderItems
+    const currentOrder = props.currentOrder
+    console.log('current order is..')
+    console.log(currentOrder.orderItems)
 
     const incrementQuantity = (item) => {
         ctx.incrementQuantity(item)
@@ -44,7 +47,7 @@ const CartTable = (props) => {
             </thead>
             <tbody>
                 {orderItems.map(orderItem => (
-                    <tr key={orderItem.product.name} >
+                    <tr key={orderItem.product.id} >
                         <td className={styles.cartTableQtyColumns}>
                             <div className={styles.quantityControls}>
                                 <RemoveIcon className={styles.incrementDecrementBtn} onClick={()=>decrementQuantity(orderItem)} color={orderItem.quantity === 1 ? 'disabled' : 'inherit'} style={{fontSize: 'medium'}}/>
