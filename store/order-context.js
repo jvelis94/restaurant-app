@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback, useContext } from "react";
+import React, { useEffect, useMemo, useState, useCallback, useContext, useReducer } from "react";
 // import { PrismaClient } from '@prisma/client'
 // const prisma = new PrismaClient()
 
@@ -11,83 +11,63 @@ const OrderContext = React.createContext({
     removeCartItem: (item) => {}
 });
 
-const defaultOrder = {
+const initialOrderState = {
+    id: null,
+    createdAt: null,
+    updatedAt: null,
     status: "open",
     subtotal: 0,
     tax: 0,
     tip: 0,
     total: 0,
     orderItems: [],
-    user: 1
+    userId: 1
 }
 
 export const OrderContextProvider = (props) => {
-    const [currentOrder, setCurrentOrder] = useState(defaultOrder)
-    const [orderItems, setOrderItems] = useState([])
-    const [updateCart, setUpdateCart] = useState(false)
+    const [currentOrder, setCurrentOrder] = useState(initialOrderState)
+    const [addedNewOrderItem, setAddedNewOrderItem] = useState(false)
 
     useEffect(() => {
         fetch('/api/cart')
             .then(response => response.json())
             .then(data => {
-                console.log(data === currentOrder)
                 setCurrentOrder(data)
-                setOrderItems(data.orderItems.map(orderItem => {
-                    let orderObject = {
-                        id: orderItem.id,
-                        product: orderItem.product,
-                        price: orderItem.product.price,
-                        quantity: orderItem.quantity,
-                        order: currentOrder,
-                        createdAt: orderItem.createdAt
-                    }
-                    return orderObject
-                }))
             })
-        
-    }, [])
+        setAddedNewOrderItem(false)
+    }, [addedNewOrderItem])
 
-    const addToCart = async (item) => {
-        console.log(`adding ${item} to cart`)
-        let itemInOrderCheck = orderItems.find(orderItem => orderItem['product']['id'] === item.id)
-        // console.log(itemInOrderCheck)
-        if (orderItems.length > 0 && itemInOrderCheck) {
+    const addToCart = async (product) => {
+        console.log(`adding ${product.name} to cart`)
+        let itemInOrderCheck = currentOrder['orderItems'].find(orderItem => orderItem['product']['id'] === product.id)
+        if (currentOrder['orderItems'].length > 0 && itemInOrderCheck) {
             console.log('running if statement inside cart')
             incrementQuantity(itemInOrderCheck)
-            setUpdateCart(true)
             return
         }
 
-        const orderItem = {
-            product: item,
-            quantity: 1,
-            price: item.price,
-            order: currentOrder,
-            createdAt: Date.now()
+        const newOrderItem = {
+            orderId: currentOrder.id || "",
+            product: product,
         }
         
-        setOrderItems((prevState) => [...prevState, orderItem])
-
         try {
-            const body = orderItem
-            await fetch("/api/cart", {
+            let response = await fetch("/api/cart", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body),
+                body: JSON.stringify(newOrderItem),
             })
+            console.log(response)
+            setAddedNewOrderItem(true)
         } catch (error) {
             console.error(error)
         }
     }
     
     const incrementQuantity = async (item) => {
-        let orderItem = orderItems.find(order => order['product']['id'] === item.product.id)
+        let orderItem = currentOrder['orderItems'].find(order => order['product']['id'] === item.product.id)
         orderItem['quantity'] += 1
-        let updateIndex = orderItems.indexOf(item)
-        setOrderItems(prevState => {
-            prevState[updateIndex] = orderItem
-            return [...prevState]
-        })
+        let updateIndex = currentOrder['orderItems'].indexOf(item)
 
         try {
             const body = orderItem
@@ -96,25 +76,21 @@ export const OrderContextProvider = (props) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
+            setAddedNewOrderItem(true)
         } catch (error) {
             console.error(error)
         }
     }
 
     const decrementQuantity = async (item) => {
-        let updateIndex = orderItems.indexOf(item)
-        let orderItem = orderItems.find(order => order['product']['id'] === item.product.id)
+        let updateIndex = currentOrder['orderItems'].indexOf(item)
+        let orderItem = currentOrder['orderItems'].find(order => order['product']['id'] === item.product.id)
         if (orderItem['quantity'] === 1) {
             removeCartItem(item)
-            setUpdateCart(true)
             return
         }
         else {
             orderItem['quantity'] -= 1
-            setOrderItems(prevState => {
-                prevState[updateIndex] = orderItem
-                return [...prevState]
-            })
         }
         try {
             const body = orderItem
@@ -123,15 +99,14 @@ export const OrderContextProvider = (props) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
+            setAddedNewOrderItem(true)
         } catch (error) {
             console.error(error)
         }
     }
     
     const removeCartItem = async (item) => {
-        let orderItem = orderItems.find(order => order['product']['id'] === item.product.id)
-        let newOrderArray = orderItems.filter(el => el !== item)
-        setOrderItems([...newOrderArray])
+        let orderItem = currentOrder['orderItems'].find(order => order['product']['id'] === item.product.id)
 
         try {
             const body = orderItem
@@ -140,6 +115,7 @@ export const OrderContextProvider = (props) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(body),
             })
+            setAddedNewOrderItem(true)
         } catch (error) {
             console.error(error)
         }
@@ -151,7 +127,6 @@ export const OrderContextProvider = (props) => {
         <OrderContext.Provider
             value={{
                 currentOrder: currentOrder,
-                orderItems: orderItems,
                 addToCart: addToCart,
                 incrementQuantity: incrementQuantity,
                 decrementQuantity: decrementQuantity,

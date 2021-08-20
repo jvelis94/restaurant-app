@@ -5,40 +5,42 @@ const prisma = new PrismaClient()
 async function handler(req,res) {
     if (req.method === 'POST') {
         console.log('running post request')
-        const order = req.body.order;
+        const order = req.body;
         // console.log(order)
         const newOrder = await prisma.order.upsert({
-          where: { id: order.id },
+          where: { id: order.orderId },
           update: {
             orderItems: {
               create: {
                 quantity: 1,
                 product: {
-                  connect: { id: req.body.product.id }
+                  connect: { id: order.product.id }
                 }
               }
             }
           },
           create: {
-            status: order.status,
-            subtotal: order.subtotal,
-            tax: order.tax,
-            tip: order.tip,
-            total: order.total,
+            status: "open",
+            subtotal: 0,
+            tax: 0,
+            tip: 0,
+            total: 0,
             orderItems: {
               create: {
                 quantity: 1,
                 product: {
-                  connect: { id: req.body.product.id }
+                  connect: { id: order.product.id }
                 }
               }
             },
             user: {
-              connect: { id: 1} 
+              connect: { id: 1 } 
             }
           }
         })
-        res.json(newOrder)    
+        console.log('disconnecting now...')
+        await prisma.$disconnect()
+        res.json(newOrder)
     }
 
     if (req.method === "GET") {
@@ -60,6 +62,8 @@ async function handler(req,res) {
           id: "asc"
         }
       })
+      console.log('disconnecting now...')
+      await prisma.$disconnect()
       res.json(order)
     }
 
