@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState, useCallback, useContext, useReduce
 // const prisma = new PrismaClient()
 
 const OrderContext = React.createContext({
+    total: 0,
     currentOrder: {},
     orderItems: [],
     addToCart: (item) => {},
@@ -27,17 +28,21 @@ const initialOrderState = {
 export const OrderContextProvider = (props) => {
     const [currentOrder, setCurrentOrder] = useState(initialOrderState)
     const [addedNewOrderItem, setAddedNewOrderItem] = useState(false)
+    const [total, setTotal] = useState(0)
 
     useEffect(() => {
         fetch('/api/cart')
             .then(response => response.json())
             .then(data => {
                 setCurrentOrder(data)
+                let totalBillArray = data['orderItems'].map(item => (item.product.price * item.quantity))
+                setTotal(totalBillArray.reduce((a,b) => a+b))
             })
         setAddedNewOrderItem(false)
     }, [addedNewOrderItem])
 
     const addToCart = async (product) => {
+        console.log(total)
         console.log(`adding ${product.name} to cart`)
         let itemInOrderCheck = currentOrder['orderItems'].find(orderItem => orderItem['product']['id'] === product.id)
         if (currentOrder['orderItems'].length > 0 && itemInOrderCheck) {
@@ -126,6 +131,7 @@ export const OrderContextProvider = (props) => {
     return (
         <OrderContext.Provider
             value={{
+                total: total,
                 currentOrder: currentOrder,
                 addToCart: addToCart,
                 incrementQuantity: incrementQuantity,

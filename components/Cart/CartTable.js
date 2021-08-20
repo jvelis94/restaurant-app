@@ -59,6 +59,11 @@ const CartTable = (props) => {
                         <td className={styles.cartTableRemoveColumns} onClick={()=>removeItem(orderItem)}>Remove</td>
                     </tr>
                 ))}
+                    <tr className={styles.cartTableTotalRow}>
+                        <td colSpan={2} className={styles.cartTableNameColumns}>Total</td>
+                        <td className={styles.cartTablePriceColumns}>{ctx.total}</td>
+                        <td></td>
+                    </tr>
             </tbody>
         </table>
     )
