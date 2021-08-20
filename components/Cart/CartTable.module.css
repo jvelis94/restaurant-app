@@ -59,5 +59,9 @@
     color: white;
 }
 
+.cartTableTotalRow {
+    background-color: #ffc534;
+    font-weight: bold;
+}
 
 
