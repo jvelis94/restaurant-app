@@ -26,7 +26,7 @@ async function main() {
   }
 
   
-//   console.log({ firstUser })
+  console.log({ firstUser })
 }
 
 main()
