@@ -6,8 +6,7 @@ import OrderContext from '../../store/order-context';
 
 const CartTable = (props) => {
     const ctx = useContext(OrderContext)
-    const orderItems = props.orderItems.sort((a, b) => new Date(b.createdAt) + new Date(a.createdAt))
-    const currentOrder = props.currentOrder
+    const orderItems = ctx.currentOrder['orderItems'].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
     // console.log('current order is..')
     // console.log(orderItems)
 
