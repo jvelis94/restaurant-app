@@ -11,18 +11,18 @@ const OrderContext = React.createContext({
     removeCartItem: (item) => {}
 });
 
-// const defaultOrder = {
-//     status: "open",
-//     subtotal: 0,
-//     tax: 0,
-//     tip: 0,
-//     total: 0,
-//     orderItems: [],
-//     user: 1
-// }
+const defaultOrder = {
+    status: "open",
+    subtotal: 0,
+    tax: 0,
+    tip: 0,
+    total: 0,
+    orderItems: [],
+    user: 1
+}
 
 export const OrderContextProvider = (props) => {
-    const [currentOrder, setCurrentOrder] = useState({})
+    const [currentOrder, setCurrentOrder] = useState(defaultOrder)
     const [orderItems, setOrderItems] = useState([])
     const [updateCart, setUpdateCart] = useState(false)
 
@@ -95,6 +95,7 @@ export const OrderContextProvider = (props) => {
         let orderItem = orderItems.find(order => order['product']['id'] === item.product.id)
         if (orderItem['quantity'] === 1) {
             removeCartItem(item)
+            return
         }
         else {
             orderItem['quantity'] -= 1
@@ -130,7 +131,7 @@ export const OrderContextProvider = (props) => {
         } catch (error) {
             console.error(error)
         }
-
+        return
     }
 
 
