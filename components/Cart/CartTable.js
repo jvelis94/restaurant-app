@@ -6,10 +6,10 @@ import OrderContext from '../../store/order-context';
 
 const CartTable = (props) => {
     const ctx = useContext(OrderContext)
-    const orderItems = props.orderItems
+    const orderItems = props.orderItems.sort((a, b) => new Date(b.createdAt) + new Date(a.createdAt))
     const currentOrder = props.currentOrder
     // console.log('current order is..')
-    // console.log(currentOrder.orderItems)
+    // console.log(orderItems)
 
     const incrementQuantity = (item) => {
         ctx.incrementQuantity(item)

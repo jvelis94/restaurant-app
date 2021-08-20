@@ -6,8 +6,9 @@ async function handler(req,res) {
     if (req.method === 'POST') {
         console.log('running post request')
         const order = req.body.order;
+        // console.log(order)
         const newOrder = await prisma.order.upsert({
-          where: { id: 1 },
+          where: { id: order.id },
           update: {
             orderItems: {
               create: {
@@ -65,6 +66,7 @@ async function handler(req,res) {
     if (req.method === "PATCH") {
       console.log('running patch request')
       const orderItemReq = req.body
+      console.log(orderItemReq)
       const orderItem = await prisma.orderItem.update({
         where: {
           id: orderItemReq.id
@@ -79,6 +81,7 @@ async function handler(req,res) {
     if (req.method === "DELETE") {
       console.log("running delete request")
       const orderItemReq = req.body
+      console.log(orderItemReq)
       const orderItem = await prisma.orderItem.delete({
         where: {
           id: orderItemReq.id

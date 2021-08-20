@@ -30,6 +30,7 @@ export const OrderContextProvider = (props) => {
         fetch('/api/cart')
             .then(response => response.json())
             .then(data => {
+                console.log(data === currentOrder)
                 setCurrentOrder(data)
                 setOrderItems(data.orderItems.map(orderItem => {
                     let orderObject = {
@@ -37,22 +38,32 @@ export const OrderContextProvider = (props) => {
                         product: orderItem.product,
                         price: orderItem.product.price,
                         quantity: orderItem.quantity,
-                        order: currentOrder
+                        order: currentOrder,
+                        createdAt: orderItem.createdAt
                     }
                     return orderObject
                 }))
             })
-        setUpdateCart(false)
         
-    }, [updateCart])
+    }, [])
 
     const addToCart = async (item) => {
         console.log(`adding ${item} to cart`)
+        let itemInOrderCheck = orderItems.find(orderItem => orderItem['product']['id'] === item.id)
+        // console.log(itemInOrderCheck)
+        if (orderItems.length > 0 && itemInOrderCheck) {
+            console.log('running if statement inside cart')
+            incrementQuantity(itemInOrderCheck)
+            setUpdateCart(true)
+            return
+        }
+
         const orderItem = {
             product: item,
             quantity: 1,
             price: item.price,
-            order: currentOrder
+            order: currentOrder,
+            createdAt: Date.now()
         }
         
         setOrderItems((prevState) => [...prevState, orderItem])
@@ -95,6 +106,7 @@ export const OrderContextProvider = (props) => {
         let orderItem = orderItems.find(order => order['product']['id'] === item.product.id)
         if (orderItem['quantity'] === 1) {
             removeCartItem(item)
+            setUpdateCart(true)
             return
         }
         else {
